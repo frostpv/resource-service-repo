@@ -1,8 +1,8 @@
 package com.songs.songsservice.controller;
 
-import com.songs.songsservice.converter.SongConverter;
 import com.songs.songsservice.dto.SongDto;
 import com.songs.songsservice.entity.Song;
+import com.songs.songsservice.mapper.SongMapper;
 import com.songs.songsservice.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/songs")
@@ -26,11 +26,14 @@ public class SongController {
     @Autowired
     SongService songService;
 
+    @Autowired
+    SongMapper songMapper;
+
     @PostMapping
     public @ResponseBody ResponseEntity<SongDto> addNewSong(@RequestBody SongDto songDto) {
-        Song song = songService.addSong(SongConverter.toEntity(songDto));
+        Song song = songService.addSong(songMapper.toEntity(songDto));
 
-        return new ResponseEntity<>(SongConverter.toDto(song), HttpStatus.OK);
+        return new ResponseEntity<>(songMapper.toDto(song), HttpStatus.OK);
     }
 
     @GetMapping
@@ -38,16 +41,16 @@ public class SongController {
         Long aLong = Long.valueOf(id);
         Song song = songService.getSong(aLong);
 
-        return new ResponseEntity<>(SongConverter.toDto(song), HttpStatus.OK);
+        return new ResponseEntity<>(songMapper.toDto(song), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public @ResponseBody ResponseEntity<List<SongDto>> deleteSongs(@RequestParam String ids) {
-        List<SongDto> songs = Arrays.stream(ids.trim().split(","))
+    public @ResponseBody ResponseEntity<List<SongDto>> deleteSongs(@RequestParam List<String> ids) {
+        List<SongDto> songs = ids.stream()
                 .map(s -> songService.getSong(Long.valueOf(s)))
                 .map(song -> songService.deleteSong(song))
-                .map(SongConverter::toDto)
-                .toList();
+                .map(song -> songMapper.toDto(song))
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(songs, HttpStatus.OK);
     }
