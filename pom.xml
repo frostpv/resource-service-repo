@@ -15,7 +15,7 @@
 	<description>edu project</description>
 	<properties>
 		<org.projectlombok.version>1.18.26</org.projectlombok.version>
-		<java.version>8</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
