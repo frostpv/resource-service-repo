@@ -44,6 +44,15 @@ public class SongController {
         return new ResponseEntity<>(songMapper.toDto(song), HttpStatus.OK);
     }
 
+    @GetMapping
+    public @ResponseBody ResponseEntity<List<SongDto>> getAllSong() {
+        List<SongDto> songDtos = songService.getAllSong().stream()
+                .map(song -> songMapper.toDto(song))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(songDtos, HttpStatus.OK);
+    }
+
     @DeleteMapping
     public @ResponseBody ResponseEntity<List<SongDto>> deleteSongs(@RequestParam List<String> ids) {
         List<SongDto> songs = ids.stream()

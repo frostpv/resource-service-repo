@@ -6,6 +6,8 @@ import com.songs.songsservice.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SongServiceImpl implements SongService {
 
@@ -26,5 +28,10 @@ public class SongServiceImpl implements SongService {
     public Song deleteSong(Song song) {
          songRepository.delete(song);
          return song;
+    }
+
+    @Override
+    public List<Song> getAllSong() {
+        return songRepository.findAll();
     }
 }
