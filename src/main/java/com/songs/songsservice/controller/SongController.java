@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/songs")
 public class SongController {
 
+
     @Autowired
     SongService songService;
 
@@ -44,7 +45,7 @@ public class SongController {
         return new ResponseEntity<>(songMapper.toDto(song), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public @ResponseBody ResponseEntity<List<SongDto>> getAllSong() {
         List<SongDto> songDtos = songService.getAllSong().stream()
                 .map(song -> songMapper.toDto(song))
